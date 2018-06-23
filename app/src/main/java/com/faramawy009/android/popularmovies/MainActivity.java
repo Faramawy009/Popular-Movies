@@ -3,6 +3,11 @@ package com.faramawy009.android.popularmovies;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,17 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tempText = null;
-
-    public class TMDbQueryTask extends AsyncTask<URL, Void, List<Movie>> {
-
-
+    List<Movie> movieResult = null;
+    RecyclerView recyclerView = null;
+    MovieAdapter movieAdapter = null;
+    public class TMDbQueryTask extends AsyncTask<URL, Void, Void> {
 
         @Override
-        protected List<Movie> doInBackground(URL... urls) {
+        protected Void doInBackground(URL... urls) {
+            movieResult.clear();
             URL url = urls[0];
-            List<Movie> result = new ArrayList<>();
             JSONObject obj = null;
+
+            //Represents the number of pages that the api have in case we want to use all of the movies in these pages
             int pagesCount = 0;
             try {
                 obj = new JSONObject(NetworkUtils.getUrlResponse(url));
@@ -36,69 +42,93 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            long start = System.currentTimeMillis();
-            for(int page=1; page<=120; page++) {
-                try {
-                    //Because the API limits to 40 requests every 10 seconds:
-                    if(page%40==0) {
-                        Thread.sleep(10000-(System.currentTimeMillis()-start));
-                        start = System.currentTimeMillis();
-                    }
-                    obj = new JSONObject(NetworkUtils.getUrlResponse(new URL(url.toString() + "&page=" + page)));
-                    JSONArray arr = obj.getJSONArray("results");
-                    for(int i=0; i<arr.length(); i++) {
-                        JSONObject currResult = arr.getJSONObject(i);
-                        String title = currResult.getString("title");
-                        String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.getString("backdrop_path");
-                        String plot = currResult.getString("overview");
-                        double rating = currResult.getDouble("vote_average");
-                        String date = currResult.getString("release_date");
-
-                        result.add(new Movie(title, posterLink, plot, rating, date));
-
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return result;
+            getNumPagesFromUrl(10, url.toString());
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<Movie> result) {
-            String test = "";
-            for(Movie m : result) {
-                test += "Title: " + m.getTitle()
-                        + "\nPoster: " + m.getPosterLink()
-                        + "\nPlot: " + m.getPlot()
-                        + "\nRating: " + m.getRating()
-                        + "\nRelease Date: " + m.getDate()
-                        + "\n\n\n";
-            }
-            if(!test.equals("")){
-                tempText.setText(test);
-            }
+        protected void onPostExecute(Void v) {
+            movieAdapter.notifyDataSetChanged();
         }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tempText = (TextView) findViewById(R.id.tv_test);
-        String url =
-                    TheMovieDatabaseApiManager.apiBaseUrl +
-                    TheMovieDatabaseApiManager.popularMoviesPath +
-                    TheMovieDatabaseApiManager.apiKeyQueryStringKey +
-                    TheMovieDatabaseApiManager.apiKeyQueryStringVal;
+        movieResult = new ArrayList<>();
+        setupRecyclerView();
+        asyncQuery(urlString(TheMovieDatabaseApiManager.popularMoviesPath));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sort_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.sort_rate:
+                asyncQuery(urlString(TheMovieDatabaseApiManager.topRatedMoviesPath));
+                break;
+            case R.id.sort_popularity:
+                asyncQuery(urlString(TheMovieDatabaseApiManager.popularMoviesPath));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public String urlString(String sortingPath) {
+       return   TheMovieDatabaseApiManager.apiBaseUrl +
+                sortingPath +
+                TheMovieDatabaseApiManager.apiKeyQueryStringKey +
+                TheMovieDatabaseApiManager.apiKeyQueryStringVal;
+    }
+
+    public void asyncQuery(String url){
         URL [] urls = new URL[1];
         try {
             urls[0] = new URL(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-//        Picasso.with(this).load("http").into(ImageView);
         new TMDbQueryTask().execute(urls);
+    }
+
+    public void setupRecyclerView(){
+        recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
+        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(),2));
+        movieAdapter = new MovieAdapter(movieResult);
+        recyclerView.setAdapter(movieAdapter);
+    }
+
+    public void getNumPagesFromUrl(int num, String url){
+        JSONObject obj = null;
+        long start = System.currentTimeMillis();
+        for(int page=1; page<=num; page++) {
+            try {
+                //Because the API limits to 40 requests every 10 seconds:
+                if(page%40==0) {
+                    Thread.sleep(10000-(System.currentTimeMillis()-start));
+                    start = System.currentTimeMillis();
+                }
+                obj = new JSONObject(NetworkUtils.getUrlResponse(new URL(url + "&page=" + page)));
+                JSONArray arr = obj.getJSONArray("results");
+                for(int i=0; i<arr.length(); i++) {
+                    JSONObject currResult = arr.getJSONObject(i);
+                    String title = currResult.getString("title");
+                    String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.getString("backdrop_path");
+                    String plot = currResult.getString("overview");
+                    double rating = currResult.getDouble("vote_average");
+                    String date = currResult.getString("release_date");
+                    movieResult.add(new Movie(title, posterLink, plot, rating, date));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

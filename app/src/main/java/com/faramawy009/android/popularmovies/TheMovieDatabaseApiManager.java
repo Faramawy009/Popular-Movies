@@ -6,7 +6,7 @@ package com.faramawy009.android.popularmovies;
 
 public class TheMovieDatabaseApiManager {
     // TODO: insert api key here
-    final public static String apiKeyQueryStringVal = "";
+    final public static String apiKeyQueryStringVal = "258673affb987bade06e6ffc1d08d77a";
 
     final public static String apiKeyQueryStringKey = "?api_key=";
     final public static String apiBaseUrl = "http://api.themoviedb.org/3";
