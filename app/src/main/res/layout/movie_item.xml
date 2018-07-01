@@ -7,3 +7,4 @@
         android:layout_height="160dp"/>
 
 </FrameLayout>
+<!--TODO: Is there a way I can make the grid layout items fit themselves to exactly span the screen with nice padding?-->

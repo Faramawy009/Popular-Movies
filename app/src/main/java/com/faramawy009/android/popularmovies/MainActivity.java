@@ -1,5 +1,6 @@
 package com.faramawy009.android.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,10 +23,23 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.GridItemClickListener{
     List<Movie> movieResult = null;
     RecyclerView recyclerView = null;
     MovieAdapter movieAdapter = null;
+
+    @Override
+    public void onGridItemClick(int clickedItemIndex) {
+        Movie movie = movieResult.get(clickedItemIndex);
+        Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
+        intent.putExtra("title", movie.getTitle());
+        intent.putExtra("poster", movie.getPosterLink());
+        intent.putExtra("date", movie.getDate());
+        intent.putExtra("rating", movie.getRating());
+        intent.putExtra("plot", movie.getPlot());
+        startActivity(intent);
+    }
+
     public class TMDbQueryTask extends AsyncTask<URL, Void, Void> {
 
         @Override
@@ -100,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     public void setupRecyclerView(){
         recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(),2));
-        movieAdapter = new MovieAdapter(movieResult);
+        movieAdapter = new MovieAdapter(movieResult, this);
         recyclerView.setAdapter(movieAdapter);
     }
 
