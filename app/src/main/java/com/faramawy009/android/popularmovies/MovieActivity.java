@@ -9,40 +9,24 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 public class MovieActivity extends AppCompatActivity {
-    private ImageView poster_iv;
-    private TextView title_tv;
-    private TextView rate_tv;
-    private TextView release_tv;
-    private TextView plot_tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-        poster_iv = findViewById(R.id.poster_iv);
-        title_tv = findViewById(R.id.title_tv);
-        rate_tv = findViewById(R.id.rate_tv);
-        release_tv = findViewById(R.id.release_tv);
-        plot_tv = findViewById(R.id.plot_tv);
+        ImageView poster_iv = findViewById(R.id.poster_iv);
+        TextView title_tv = findViewById(R.id.title_tv);
+        TextView rate_tv = findViewById(R.id.rate_tv);
+        TextView release_tv = findViewById(R.id.release_tv);
+        TextView plot_tv = findViewById(R.id.plot_tv);
         Intent me = getIntent();
-        if(me.hasExtra("poster")){
-            String posterPath = me.getStringExtra("poster");
-            Picasso.with(this).load(posterPath).into(poster_iv);
-        }
-        if(me.hasExtra("date")){
-            String date = me.getStringExtra("date");
-            release_tv.setText(date);
-        }
-        if(me.hasExtra("rating")){
-            double rating = me.getDoubleExtra("rating", 0.0);
-            rate_tv.setText(Double.toString(rating));
-        }
-        if(me.hasExtra("title")){
-            String title = me.getStringExtra("title");
-            title_tv.setText(title);
-        }
-        if(me.hasExtra("plot")){
-            String plot = me.getStringExtra("plot");
-            plot_tv.setText(plot);
+
+        if(me.hasExtra("movie")){
+            Movie movie = me.getParcelableExtra("movie");
+            Picasso.with(this).load(movie.getPosterLink()).into(poster_iv);
+            release_tv.setText(movie.getDate());
+            rate_tv.setText(Double.toString(movie.getRating()));
+            title_tv.setText(movie.getTitle());
+            plot_tv.setText(movie.getPlot());
         }
     }
 }

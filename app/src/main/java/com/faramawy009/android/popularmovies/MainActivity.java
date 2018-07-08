@@ -31,12 +31,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     @Override
     public void onGridItemClick(int clickedItemIndex) {
         Movie movie = movieResult.get(clickedItemIndex);
-        Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
-        intent.putExtra("title", movie.getTitle());
-        intent.putExtra("poster", movie.getPosterLink());
-        intent.putExtra("date", movie.getDate());
-        intent.putExtra("rating", movie.getRating());
-        intent.putExtra("plot", movie.getPlot());
+        Intent intent = new Intent(MainActivity.this, MovieActivity.class);
+        intent.putExtra("movie", movie);
         startActivity(intent);
     }
 

@@ -1,12 +1,15 @@
 package com.faramawy009.android.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by elfar009 on 6/10/18.
  */
 
-public class Movie {
+public class Movie implements Parcelable {
     private String title;
     private String posterLink;
     private String plot;
@@ -59,5 +62,37 @@ public class Movie {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(posterLink);
+        parcel.writeString(plot);
+        parcel.writeDouble(rating);
+        parcel.writeString(date);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    private Movie(Parcel in) {
+        title = in.readString();
+        posterLink = in.readString();
+        plot = in.readString();
+        rating = in.readDouble();
+        date = in.readString();
     }
 }
