@@ -9,11 +9,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 public class MovieActivity extends AppCompatActivity {
-    ImageView poster_iv;
-    TextView title_tv;
-    TextView rate_tv;
-    TextView release_tv;
-    TextView plot_tv;
+    private ImageView poster_iv;
+    private TextView title_tv;
+    private TextView rate_tv;
+    private TextView release_tv;
+    private TextView plot_tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

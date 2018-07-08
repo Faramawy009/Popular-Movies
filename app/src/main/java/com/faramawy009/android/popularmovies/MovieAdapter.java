@@ -36,7 +36,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         void onGridItemClick(int clickedItemIndex);
     }
     private List<Movie> moviesList;
-    GridItemClickListener itemOnClickListener;
+    private GridItemClickListener itemOnClickListener;
     public MovieAdapter(List<Movie> moviesList, GridItemClickListener itemOnClickListener) {
         this.moviesList = moviesList;
         this.itemOnClickListener = itemOnClickListener;

@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.GridItemClickListener{
-    List<Movie> movieResult = null;
-    RecyclerView recyclerView = null;
-    MovieAdapter movieAdapter = null;
+    private List<Movie> movieResult = null;
+    private RecyclerView recyclerView = null;
+    private MovieAdapter movieAdapter = null;
 
     @Override
     public void onGridItemClick(int clickedItemIndex) {
