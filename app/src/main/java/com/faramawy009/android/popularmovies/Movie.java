@@ -36,32 +36,16 @@ public class Movie implements Parcelable {
         return mPosterLink;
     }
 
-    public void setPosterLink(String posterLink) {
-        this.mPosterLink = posterLink;
-    }
-
     public String getPlot() {
         return mPlot;
-    }
-
-    public void setPlot(String plot) {
-        this.mPlot = plot;
     }
 
     public double getRating() {
         return mRating;
     }
 
-    public void setRating(double rating) {
-        this.mRating = rating;
-    }
-
     public String getDate() {
         return mDate;
-    }
-
-    public void setDate(String date) {
-        this.mDate = date;
     }
 
     @Override
