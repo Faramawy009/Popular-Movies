@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -109,9 +111,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
 
     public void setupRecyclerView(){
         recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(),2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,calculateBestSpanCount(500)));
         movieAdapter = new MovieAdapter(movieResult, this);
         recyclerView.setAdapter(movieAdapter);
+    }
+
+    private int calculateBestSpanCount(int posterWidth) {
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        float screenWidth = outMetrics.widthPixels;
+        return Math.round(screenWidth / posterWidth);
     }
 
     public void getNumPagesFromUrl(int num, String url){
