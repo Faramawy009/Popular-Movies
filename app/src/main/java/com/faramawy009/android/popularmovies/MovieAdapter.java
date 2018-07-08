@@ -28,18 +28,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         @Override
         public void onClick(View view) {
             int clickIndex = getAdapterPosition();
-            itemOnClickListener.onGridItemClick(clickIndex);
+            mItemOnClickListener.onGridItemClick(clickIndex);
         }
     }
 
     public interface GridItemClickListener {
         void onGridItemClick(int clickedItemIndex);
     }
-    private List<Movie> moviesList;
-    private GridItemClickListener itemOnClickListener;
+    private List<Movie> mMoviesList;
+    private GridItemClickListener mItemOnClickListener;
     public MovieAdapter(List<Movie> moviesList, GridItemClickListener itemOnClickListener) {
-        this.moviesList = moviesList;
-        this.itemOnClickListener = itemOnClickListener;
+        this.mMoviesList = moviesList;
+        this.mItemOnClickListener = itemOnClickListener;
 
     }
 
@@ -57,12 +57,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        Movie m = moviesList.get(position);
+        Movie m = mMoviesList.get(position);
         Picasso.with(holder.movieItemView.getContext()).load(m.getPosterLink()).into(holder.movieItemView);
     }
 
     @Override
     public int getItemCount() {
-        return moviesList.size();
+        return mMoviesList.size();
     }
 }

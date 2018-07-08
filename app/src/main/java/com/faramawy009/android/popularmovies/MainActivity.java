@@ -27,8 +27,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.GridItemClickListener{
     private List<Movie> movieResult = null;
-    private RecyclerView recyclerView = null;
-    private MovieAdapter movieAdapter = null;
+    private RecyclerView mRecyclerView = null;
+    private MovieAdapter mMovieAdapter = null;
 
     @Override
     public void onGridItemClick(int clickedItemIndex) {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
 
         @Override
         protected void onPostExecute(Void v) {
-            movieAdapter.notifyDataSetChanged();
+            mMovieAdapter.notifyDataSetChanged();
         }
     }
     @Override
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
         setContentView(R.layout.activity_main);
         movieResult = new ArrayList<>();
         setupRecyclerView();
-        asyncQuery(urlString(TheMovieDatabaseApiManager.popularMoviesPath));
+        asyncQuery(urlString(TheMovieDatabaseApiManager.sPopularMoviesPath));
     }
 
     @Override
@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.sort_rate:
-                asyncQuery(urlString(TheMovieDatabaseApiManager.topRatedMoviesPath));
+                asyncQuery(urlString(TheMovieDatabaseApiManager.sTopRatedMoviesPath));
                 break;
             case R.id.sort_popularity:
-                asyncQuery(urlString(TheMovieDatabaseApiManager.popularMoviesPath));
+                asyncQuery(urlString(TheMovieDatabaseApiManager.sPopularMoviesPath));
                 break;
 
         }
@@ -93,10 +93,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     }
 
     public String urlString(String sortingPath) {
-       return   TheMovieDatabaseApiManager.apiBaseUrl +
+       return   TheMovieDatabaseApiManager.sApiBaseUrl +
                 sortingPath +
-                TheMovieDatabaseApiManager.apiKeyQueryStringKey +
-                TheMovieDatabaseApiManager.apiKeyQueryStringVal;
+                TheMovieDatabaseApiManager.sApiKeyQueryStringKey +
+                TheMovieDatabaseApiManager.sApiKeyQueryStringVal;
     }
 
     public void asyncQuery(String url){
@@ -110,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     }
 
     public void setupRecyclerView(){
-        recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,calculateBestSpanCount(500)));
-        movieAdapter = new MovieAdapter(movieResult, this);
-        recyclerView.setAdapter(movieAdapter);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this,calculateBestSpanCount(500)));
+        mMovieAdapter = new MovieAdapter(movieResult, this);
+        mRecyclerView.setAdapter(mMovieAdapter);
     }
 
     private int calculateBestSpanCount(int posterWidth) {
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                 for(int i=0; i<arr.length(); i++) {
                     JSONObject currResult = arr.getJSONObject(i);
                     String title = currResult.optString("title");
-                    String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.optString("poster_path");
+                    String posterLink = TheMovieDatabaseApiManager.sImageBaseUrl + currResult.optString("poster_path");
                     String plot = currResult.optString("overview");
                     double rating = currResult.optDouble("vote_average");
                     String date = currResult.optString("release_date");

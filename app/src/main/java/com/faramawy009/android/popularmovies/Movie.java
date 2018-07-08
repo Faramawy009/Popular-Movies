@@ -10,58 +10,58 @@ import java.util.Date;
  */
 
 public class Movie implements Parcelable {
-    private String title;
-    private String posterLink;
-    private String plot;
-    private double rating;
-    private String date;
+    private String mTitle;
+    private String mPosterLink;
+    private String mPlot;
+    private double mRating;
+    private String mDate;
 
     public Movie(String title, String posterLink, String plot, double rating, String date) {
-        this.title = title;
-        this.posterLink = posterLink;
-        this.plot = plot;
-        this.rating = rating;
-        this.date = date;
+        this.mTitle = title;
+        this.mPosterLink = posterLink;
+        this.mPlot = plot;
+        this.mRating = rating;
+        this.mDate = date;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
     }
 
     public String getPosterLink() {
-        return posterLink;
+        return mPosterLink;
     }
 
     public void setPosterLink(String posterLink) {
-        this.posterLink = posterLink;
+        this.mPosterLink = posterLink;
     }
 
     public String getPlot() {
-        return plot;
+        return mPlot;
     }
 
     public void setPlot(String plot) {
-        this.plot = plot;
+        this.mPlot = plot;
     }
 
     public double getRating() {
-        return rating;
+        return mRating;
     }
 
     public void setRating(double rating) {
-        this.rating = rating;
+        this.mRating = rating;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     @Override
@@ -71,11 +71,11 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(title);
-        parcel.writeString(posterLink);
-        parcel.writeString(plot);
-        parcel.writeDouble(rating);
-        parcel.writeString(date);
+        parcel.writeString(mTitle);
+        parcel.writeString(mPosterLink);
+        parcel.writeString(mPlot);
+        parcel.writeDouble(mRating);
+        parcel.writeString(mDate);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -89,10 +89,10 @@ public class Movie implements Parcelable {
     };
 
     private Movie(Parcel in) {
-        title = in.readString();
-        posterLink = in.readString();
-        plot = in.readString();
-        rating = in.readDouble();
-        date = in.readString();
+        mTitle = in.readString();
+        mPosterLink = in.readString();
+        mPlot = in.readString();
+        mRating = in.readDouble();
+        mDate = in.readString();
     }
 }
