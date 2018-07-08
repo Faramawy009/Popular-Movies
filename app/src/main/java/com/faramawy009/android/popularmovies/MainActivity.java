@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
             int pagesCount = 0;
             try {
                 obj = new JSONObject(NetworkUtils.getUrlResponse(url));
-                pagesCount = obj.getInt("total_pages");
+                pagesCount = obj.optInt("total_pages");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -138,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                 JSONArray arr = obj.getJSONArray("results");
                 for(int i=0; i<arr.length(); i++) {
                     JSONObject currResult = arr.getJSONObject(i);
-                    String title = currResult.getString("title");
-                    String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.getString("poster_path");
-                    String plot = currResult.getString("overview");
-                    double rating = currResult.getDouble("vote_average");
-                    String date = currResult.getString("release_date");
+                    String title = currResult.optString("title");
+                    String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.optString("poster_path");
+                    String plot = currResult.optString("overview");
+                    double rating = currResult.optDouble("vote_average");
+                    String date = currResult.optString("release_date");
                     movieResult.add(new Movie(title, posterLink, plot, rating, date));
                 }
 
