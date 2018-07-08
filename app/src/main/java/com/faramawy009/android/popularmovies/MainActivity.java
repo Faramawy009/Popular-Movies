@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                 for(int i=0; i<arr.length(); i++) {
                     JSONObject currResult = arr.getJSONObject(i);
                     String title = currResult.getString("title");
-                    String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.getString("backdrop_path");
+                    String posterLink = TheMovieDatabaseApiManager.imageBaseUrl + currResult.getString("poster_path");
                     String plot = currResult.getString("overview");
                     double rating = currResult.getDouble("vote_average");
                     String date = currResult.getString("release_date");
