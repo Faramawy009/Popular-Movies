@@ -93,10 +93,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
     }
 
     public String urlString(String sortingPath) {
+        // TODO: Inset Api key in Build Config through app build.gradle with a name "TMDB_API_KEY"
        return   TheMovieDatabaseApiManager.sApiBaseUrl +
                 sortingPath +
                 TheMovieDatabaseApiManager.sApiKeyQueryStringKey +
-                TheMovieDatabaseApiManager.sApiKeyQueryStringVal;
+                BuildConfig.TMDB_API_KEY;
     }
 
     public void asyncQuery(String url){
