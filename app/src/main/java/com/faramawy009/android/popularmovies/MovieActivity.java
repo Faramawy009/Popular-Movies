@@ -1,8 +1,13 @@
 package com.faramawy009.android.popularmovies;
 
 import android.content.Intent;
+import android.drm.DrmStore;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +32,10 @@ public class MovieActivity extends AppCompatActivity {
             rate_tv.setText(Double.toString(movie.getRating()));
             title_tv.setText(movie.getTitle());
             plot_tv.setText(movie.getPlot());
+        }
+        ActionBar actionBar = this.getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 }
