@@ -1,7 +1,11 @@
 package com.faramawy009.android.popularmovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.faramawy009.android.popularmovies.Database.AppDatabase;
 import com.faramawy009.android.popularmovies.Database.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -27,9 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.GridItemClickListener{
-    private List<Movie> movieResult = null;
+    private ArrayList<Movie> movieResult = null;
     private RecyclerView mRecyclerView = null;
     private MovieAdapter mMovieAdapter = null;
+    private AppDatabase db = null;
 
     @Override
     public void onGridItemClick(int clickedItemIndex) {
@@ -55,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            getNumPagesFromUrl(2, url.toString());
+            getNumPagesFromUrl(1, url.toString());
             return null;
         }
 
@@ -70,7 +76,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
         setContentView(R.layout.activity_main);
         movieResult = new ArrayList<>();
         setupRecyclerView();
-        asyncQuery(urlString(TheMovieDatabaseApiManager.sPopularMoviesPath));
+        db = AppDatabase.getInstance(this);
+
+        if(savedInstanceState!=null){
+            queryFavorites();
+            movieResult = savedInstanceState.getParcelableArrayList("savedMovies");
+            setupRecyclerView();
+        } else {
+            asyncQuery(urlString(TheMovieDatabaseApiManager.sPopularMoviesPath));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList("savedMovies", movieResult);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -88,7 +108,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
             case R.id.sort_popularity:
                 asyncQuery(urlString(TheMovieDatabaseApiManager.sPopularMoviesPath));
                 break;
-
+            case R.id.show_favorites:
+                queryFavorites();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -178,5 +200,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                 e.printStackTrace();
             }
         }
+    }
+
+    public void queryFavorites(){
+        LiveData<List<Movie>> favorites = db.movieDao().loadFavorites();
+        favorites.observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                movieResult.clear();
+                movieResult.addAll(movies);
+                mMovieAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

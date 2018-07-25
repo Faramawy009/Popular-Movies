@@ -1,5 +1,6 @@
 package com.faramawy009.android.popularmovies;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.drm.DrmStore;
 import android.support.v4.app.NavUtils;
@@ -13,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.faramawy009.android.popularmovies.Database.AppDatabase;
 import com.faramawy009.android.popularmovies.Database.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -30,11 +32,13 @@ public class MovieActivity extends AppCompatActivity {
         TextView plot_tv = findViewById(R.id.plot_tv);
         TextView reviews_tv = findViewById(R.id.reviews_tv);
         TextView trailers_tv = findViewById(R.id.trailers_tv);
-        CheckBox favorites_cb = findViewById(R.id.favorite_cb);
+        final CheckBox favorites_cb = findViewById(R.id.favorite_cb);
         Intent me = getIntent();
+        final Movie movie;
+        final AppDatabase db = AppDatabase.getInstance(this);
 
         if(me.hasExtra("movie")){
-            Movie movie = me.getParcelableExtra("movie");
+            movie = me.getParcelableExtra("movie");
             Picasso.with(this).load(movie.getPosterLink()).into(poster_iv);
             release_tv.setText(movie.getDate());
             rate_tv.setText(Double.toString(movie.getRating()));
@@ -53,21 +57,49 @@ public class MovieActivity extends AppCompatActivity {
                 trailerString += (i+1) + ". https://www.youtube.com/watch?v=" + trailers.get(i) + "\n\n";
             }
             trailers_tv.setText(trailerString);
+            System.out.println(movie.get_id());
+
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    final List<Movie> movieExists = db.movieDao().getMovie(movie.get_id());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            favorites_cb.setChecked(movieExists.size()==1);
+                        }
+                    });
+                }
+            });
+
+//            List<Movie> movieExists = db.movieDao().getMovie(movie.get_id());
+//            favorites_cb.setChecked(movieExists.size() == 1);
+            favorites_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    if(isChecked){
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                db.movieDao().insertMovie(movie);
+                            }
+                        });
+                    } else{
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                db.movieDao().deleteMovie(movie);
+                            }
+                        });
+                    }
+                }
+            });
         }
         ActionBar actionBar = this.getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        favorites_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
 
-                } else{
-
-                }
-            }
-        });
     }
 }
