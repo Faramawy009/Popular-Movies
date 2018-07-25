@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                         trailerKeys.add(trailerResults.getJSONObject(j).optString("key"));
                     }
 
-                    movieResult.add(new Movie(title, posterLink, plot, rating, date, trailerKeys, reviewContent ));
+                    movieResult.add(new Movie(id, title, posterLink, plot, rating, date, trailerKeys, reviewContent ));
                 }
 
             } catch (Exception e) {

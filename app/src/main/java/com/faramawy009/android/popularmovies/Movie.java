@@ -12,6 +12,7 @@ import java.util.List;
  */
 
 public class Movie implements Parcelable {
+    private int _id;
     private String mTitle;
     private String mPosterLink;
     private String mPlot;
@@ -28,8 +29,9 @@ public class Movie implements Parcelable {
         this.mDate = date;
     }
 
-    public Movie(String title, String posterLink, String plot, double rating, String date,
+    public Movie(int id, String title, String posterLink, String plot, double rating, String date,
                  List<String> trailers, List<String> reviews) {
+        this._id = id;
         this.mTitle = title;
         this.mPosterLink = posterLink;
         this.mPlot = plot;
@@ -78,6 +80,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(_id);
         parcel.writeString(mTitle);
         parcel.writeString(mPosterLink);
         parcel.writeString(mPlot);
@@ -98,6 +101,7 @@ public class Movie implements Parcelable {
     };
 
     private Movie(Parcel in) {
+        _id = in.readInt();
         mTitle = in.readString();
         mPosterLink = in.readString();
         mPlot = in.readString();
