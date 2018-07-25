@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ public class MovieActivity extends AppCompatActivity {
         TextView plot_tv = findViewById(R.id.plot_tv);
         TextView reviews_tv = findViewById(R.id.reviews_tv);
         TextView trailers_tv = findViewById(R.id.trailers_tv);
+        CheckBox favorites_cb = findViewById(R.id.favorite_cb);
         Intent me = getIntent();
 
         if(me.hasExtra("movie")){
@@ -54,5 +57,16 @@ public class MovieActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        favorites_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+
+                } else{
+
+                }
+            }
+        });
     }
 }
