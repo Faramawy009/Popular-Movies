@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.faramawy009.android.popularmovies.Database.Movie;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
