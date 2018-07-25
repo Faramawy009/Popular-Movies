@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            getNumPagesFromUrl(10, url.toString());
+            getNumPagesFromUrl(2, url.toString());
             return null;
         }
 
@@ -144,7 +144,33 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Grid
                     String plot = currResult.optString("overview");
                     double rating = currResult.optDouble("vote_average");
                     String date = currResult.optString("release_date");
-                    movieResult.add(new Movie(title, posterLink, plot, rating, date));
+                    int id = currResult.optInt("id");
+
+                    JSONObject reviews = new JSONObject(NetworkUtils.getUrlResponse(new URL(
+                            TheMovieDatabaseApiManager.sApiBaseUrl + "/movie/" + id
+                            + "/reviews" + TheMovieDatabaseApiManager.sApiKeyQueryStringKey
+                            + BuildConfig.TMDB_API_KEY
+                    )));
+
+                    JSONArray reviewResults = reviews.getJSONArray("results");
+                    List<String> reviewContent = new ArrayList<>();
+                    for(int j=0; j<reviewResults.length(); j++){
+                        reviewContent.add(reviewResults.getJSONObject(j).optString("content"));
+                    }
+
+                    JSONObject trailers = new JSONObject(NetworkUtils.getUrlResponse(new URL(
+                            TheMovieDatabaseApiManager.sApiBaseUrl + "/movie/" + id
+                                    + "/videos" + TheMovieDatabaseApiManager.sApiKeyQueryStringKey
+                                    + BuildConfig.TMDB_API_KEY
+                    )));
+
+                    JSONArray trailerResults = trailers.getJSONArray("results");
+                    List<String> trailerKeys = new ArrayList<>();
+                    for(int j=0; j<trailerResults.length(); j++){
+                        trailerKeys.add(trailerResults.getJSONObject(j).optString("key"));
+                    }
+
+                    movieResult.add(new Movie(title, posterLink, plot, rating, date, trailerKeys, reviewContent ));
                 }
 
             } catch (Exception e) {

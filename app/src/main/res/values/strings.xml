@@ -4,5 +4,7 @@
     <string name="date">Release Date: </string>
     <string name="rate">Rating: </string>
     <string name="plot">Plot: </string>
+    <string name="reviews">Reviews: </string>
+    <string name="trailers">Trailers: </string>
     <string name="movie_activity">Movie Details</string>
 </resources>

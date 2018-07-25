@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class MovieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,8 @@ public class MovieActivity extends AppCompatActivity {
         TextView rate_tv = findViewById(R.id.rate_tv);
         TextView release_tv = findViewById(R.id.release_tv);
         TextView plot_tv = findViewById(R.id.plot_tv);
+        TextView reviews_tv = findViewById(R.id.reviews_tv);
+        TextView trailers_tv = findViewById(R.id.trailers_tv);
         Intent me = getIntent();
 
         if(me.hasExtra("movie")){
@@ -32,6 +36,19 @@ public class MovieActivity extends AppCompatActivity {
             rate_tv.setText(Double.toString(movie.getRating()));
             title_tv.setText(movie.getTitle());
             plot_tv.setText(movie.getPlot());
+            List<String> reviews = movie.getReviews();
+            String reviewString = "";
+            for(int i=0; i<reviews.size(); i++){
+                reviewString += (i+1) + ". " + reviews.get(i) + "\n\n";
+            }
+            reviews_tv.setText(reviewString);
+
+            List<String> trailers = movie.getTrailers();
+            String trailerString = "";
+            for(int i=0; i<trailers.size(); i++){
+                trailerString += (i+1) + ". https://www.youtube.com/watch?v=" + trailers.get(i) + "\n\n";
+            }
+            trailers_tv.setText(trailerString);
         }
         ActionBar actionBar = this.getSupportActionBar();
         if(actionBar != null){

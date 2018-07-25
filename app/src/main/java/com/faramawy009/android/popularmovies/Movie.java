@@ -3,7 +3,9 @@ package com.faramawy009.android.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by elfar009 on 6/10/18.
@@ -15,6 +17,8 @@ public class Movie implements Parcelable {
     private String mPlot;
     private double mRating;
     private String mDate;
+    private List<String> mTrailers;
+    private List<String> mReviews;
 
     public Movie(String title, String posterLink, String plot, double rating, String date) {
         this.mTitle = title;
@@ -22,6 +26,17 @@ public class Movie implements Parcelable {
         this.mPlot = plot;
         this.mRating = rating;
         this.mDate = date;
+    }
+
+    public Movie(String title, String posterLink, String plot, double rating, String date,
+                 List<String> trailers, List<String> reviews) {
+        this.mTitle = title;
+        this.mPosterLink = posterLink;
+        this.mPlot = plot;
+        this.mRating = rating;
+        this.mDate = date;
+        this.mTrailers = new ArrayList<>(trailers);
+        this.mReviews = new ArrayList<>(reviews);
     }
 
     public String getTitle() {
@@ -48,6 +63,14 @@ public class Movie implements Parcelable {
         return mDate;
     }
 
+    public List<String> getTrailers() {
+        return mTrailers;
+    }
+
+    public List<String> getReviews() {
+        return mReviews;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -60,6 +83,8 @@ public class Movie implements Parcelable {
         parcel.writeString(mPlot);
         parcel.writeDouble(mRating);
         parcel.writeString(mDate);
+        parcel.writeStringList(mTrailers);
+        parcel.writeStringList(mReviews);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -78,5 +103,9 @@ public class Movie implements Parcelable {
         mPlot = in.readString();
         mRating = in.readDouble();
         mDate = in.readString();
+        mTrailers = in.createStringArrayList();
+        mReviews = in.createStringArrayList();
+//        in.readStringList(mTrailers);
+//        in.readStringList(mReviews);
     }
 }
